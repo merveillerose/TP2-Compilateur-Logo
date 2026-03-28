@@ -1,8 +1,10 @@
 mod lexer;
 mod parser;
+mod ast;
 
 use crate::lexer::lexer_rules;
 use crate::parser::grammar;
+use crate::ast::eval;
 
 
 fn main() {
@@ -25,6 +27,10 @@ fn main() {
 
     let grammar = grammar();
     let parse_trees = &santiago::parser::parse(&grammar, &lexemes).expect("syntax error")[0];
-    println!("{:#?}", parse_trees);
+    //println!("{:#?}", parse_trees);
+    //println!("{:?}", parse_trees.as_abstract_syntax_tree());
+    
+    let ast = parse_trees.as_abstract_syntax_tree();
+    eval(&ast)
 
 }
