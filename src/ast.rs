@@ -16,6 +16,7 @@ pub enum Order{
     Right,
 }
 
+#[allow(dead_code)]
 pub fn eval(ast: &AST) -> () {
     match ast {
         AST::Program(commands) => {

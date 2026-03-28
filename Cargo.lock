@@ -16,6 +16,7 @@ name = "compilateur_logo"
 version = "0.1.0"
 dependencies = [
  "santiago",
+ "svg_fmt",
 ]
 
 [[package]]
@@ -61,3 +62,9 @@ checksum = "de36022292bc2086eb8f55bffa460fef3475e4459b478820711f4c421feb87ec"
 dependencies = [
  "regex",
 ]
+
+[[package]]
+name = "svg_fmt"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0193cc4331cfd2f3d2011ef287590868599a2f33c3e69bc22c1a3d3acf9e02fb"
