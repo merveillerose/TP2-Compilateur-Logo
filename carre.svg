@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500">
-            <path d="M 100 100 L 200 100" stroke="black"/>
-<path d="M 200 100 L 200 200" stroke="black"/>
-<path d="M 200 200 L 100 199.99998" stroke="black"/>
-<path d="M 100 199.99998 L 100 99.999985" stroke="black"/>
-</svg>
-</svg>
-</svg>
-</svg>
-</svg>
-</svg>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500">
+<path d="M 150 100 L 250 100" stroke="black"/>
+<path d="M 250 100 L 250 200" stroke="black"/>
+<path d="M 250 200 L 150 199.99998" stroke="black"/>
+<path d="M 150 199.99998 L 150 99.999985" stroke="black"/>
+<path d="M 150 99.999985 L 114.64467 135.35533" stroke="black"/>
+<path d="M 135.85786 114.14212 L 121.71573 99.999985" stroke="black"/>
+<path d="M 100.502525 78.78678 L 86.36039 92.92892" stroke="black"/>
 </svg>

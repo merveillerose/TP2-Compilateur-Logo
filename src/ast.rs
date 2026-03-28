@@ -1,14 +1,18 @@
 #[allow(dead_code)]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum AST {
     Program(Vec<AST>),
     Command(Vec<AST>),
     Order(Order), 
     Number(i32),
+    Repeat(i32, Box<AST>),  
+    Block(Vec<AST>),        
+    PenUp,
+    PenDown,
     None,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Order{
     Forward,
     Backward,
@@ -42,8 +46,20 @@ pub fn eval(ast: &AST) -> () {
         AST::Number(n) => {
             println!("{} unités",n);
         }
+        AST::Repeat(n, cmd) => {
+            for _ in 0..*n {
+                eval(cmd);
+            }
+        }
+        AST::Block(commands) => {
+            for cmd in commands {
+                eval(cmd);
+            }
+        }
+        AST::PenUp => println!("Stylo levé"),
+        AST::PenDown => println!("Stylo baissé"),
+
         AST::None => {
-            // Règle vide, rien à afficher
         }
     }
 }

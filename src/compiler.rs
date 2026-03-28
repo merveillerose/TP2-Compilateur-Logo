@@ -1,7 +1,9 @@
 use crate::ast::{AST,Order};
 
+
+
 #[derive(Debug)]
-pub struct Logo{
+pub struct Logo {
     x: f32,
     y: f32,
     angle: f32,
@@ -9,23 +11,22 @@ pub struct Logo{
     svg_content: String,
 }
 
-
-impl Logo{
+impl Logo {
     pub fn new() -> Self {
-        Logo{
+        Logo {
             x: 100.0,
             y: 100.0,
             angle: 0.0,
-            pen_down: true,  // stylo baissé par défaut
+            pen_down: true, // stylo baissé par défaut
             svg_content: String::from(
                 r#"<?xml version="1.0" encoding="utf-8"?>
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500">
-            "#,
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500">
+"#,
             ),
         }
     }
 
-    pub fn compiler(&mut self, ast: &AST) -> String {
+    pub fn compiler(&mut self, ast: &AST) {
         match ast {
             AST::Program(commands) => {
                 for cmd in commands {
@@ -33,9 +34,7 @@ impl Logo{
                 }
             }
             AST::Command(parts) => {
-                // On stocke temporairement la commande pour le nombre
                 let mut current_order: Option<&Order> = None;
-
                 for part in parts {
                     match part {
                         AST::Order(order) => current_order = Some(order),
@@ -70,31 +69,46 @@ impl Logo{
                                         self.x = new_x;
                                         self.y = new_y;
                                     }
-                                    Order::Left => {
-                                        self.angle -= *n as f32;
-                                    }
-                                    Order::Right => {
-                                        self.angle += *n as f32;
-                                    }
+                                    Order::Left => self.angle -= *n as f32,
+                                    Order::Right => self.angle += *n as f32,
                                 }
                             }
                         }
                         AST::None => {}
-                        AST::Program(_) | AST::Command(_) => {
-                            // récursion si jamais il y a des sous-commandes
-                            self.compiler(part);
+                        AST::Program(_) | AST::Command(_) => self.compiler(part),
+                        AST::Repeat(n, command) => {
+                            for _ in 0..*n {
+                                self.compiler(command);
+                            }
                         }
+                        AST::Block(commands) => {
+                            for cmd in commands {
+                                self.compiler(cmd);
+                            }
+                        }
+                        AST::PenUp => self.pen_down = false,
+                        AST::PenDown => self.pen_down = true,
                     }
                 }
             }
+            AST::Repeat(n, command) => {
+                for _ in 0..*n {
+                    self.compiler(command);
+                }
+            }
+            AST::Block(commands) => {
+                for cmd in commands {
+                    self.compiler(cmd);
+                }
+            }
+            AST::PenUp => self.pen_down = false,
+            AST::PenDown => self.pen_down = true,
             AST::Order(_) | AST::Number(_) | AST::None => {}
         }
+    }
 
-        // À la fin du programme, fermer le SVG
-        if let AST::Program(_) = ast {
-            self.svg_content.push_str("</svg>\n");
-        }
-
+    pub fn finish(&mut self) -> String {
+        self.svg_content.push_str("</svg>\n");
         self.svg_content.clone()
     }
 }

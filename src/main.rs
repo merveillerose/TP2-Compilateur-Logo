@@ -22,9 +22,29 @@ fn main() {
         right 90
     ";
 
-    let _input = "forward 100";
+    
+
+    let _input = "
+    penup
+    forward 50
+    pendown
+    repeat 4 [
+        forward 100
+        right 90
+    ]
+    left 45
+    backward 50
+    repeat 2 [
+        penup
+        forward 30
+        pendown
+        left 90
+        forward 20
+    ]
+";
+
     let lexer_rules = lexer_rules();
-    let lexemes = santiago::lexer::lex(&lexer_rules, &_logo_program).unwrap();
+    let lexemes = santiago::lexer::lex(&lexer_rules, &_input).unwrap();
     //println!("{:#?}", lexemes);
 
     let grammar = grammar();
@@ -37,9 +57,8 @@ fn main() {
 
     // ========= SVG =============
     let mut logo = Logo::new();
-    let svg = logo.compiler(&ast);
-
+    logo.compiler(&ast); // compiler remplit le svg_content
+    let svg = logo.finish(); // récupère le SVG complet
     std::fs::write("carre.svg", svg).expect("Impossible d'écrire le fichier SVG");
-    
-     println!("Fichier carre.svg généré !");
+    println!("SVG généré dans carre.svg !");
 }
