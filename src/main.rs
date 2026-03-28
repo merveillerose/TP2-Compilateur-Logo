@@ -2,29 +2,15 @@ mod lexer;
 mod parser;
 mod ast;
 mod compiler;
+mod interpreter;
 
 use crate::lexer::lexer_rules;
 use crate::parser::grammar;
-//use crate::ast::eval;
-use crate::compiler::Logo;
-
+use crate::compiler::Logo as CompilerLogo;
+use crate::interpreter::Interpreter;
 
 fn main() {
-    // programme qui respecte la grammaire pour construire un carré
-    let _logo_program = "
-        forward 100
-        right 90
-        forward 100
-        right 90
-        forward 100
-        right 90
-        forward 100
-        right 90
-    ";
-
-    
-
-    let _input = "
+    let input = "
     penup
     forward 50
     pendown
@@ -44,21 +30,24 @@ fn main() {
 ";
 
     let lexer_rules = lexer_rules();
-    let lexemes = santiago::lexer::lex(&lexer_rules, &_input).unwrap();
-    //println!("{:#?}", lexemes);
+    let lexemes = santiago::lexer::lex(&lexer_rules, &input).unwrap();
 
     let grammar = grammar();
     let parse_trees = &santiago::parser::parse(&grammar, &lexemes).expect("syntax error")[0];
-    //println!("{:#?}", parse_trees);
-    //println!("{:?}", parse_trees.as_abstract_syntax_tree());
-    
     let ast = parse_trees.as_abstract_syntax_tree();
-    //eval(&ast);
 
-    // ========= SVG =============
-    let mut logo = Logo::new();
-    logo.compiler(&ast); // compiler remplit le svg_content
-    let svg = logo.finish(); // récupère le SVG complet
-    std::fs::write("carre.svg", svg).expect("Impossible d'écrire le fichier SVG");
-    println!("SVG généré dans carre.svg !");
+    // ----- interpreter (partie 5)
+    let mut interpreter = Interpreter::new();
+    interpreter.run(&ast);
+    let svg_interpretation = interpreter.to_svg();
+    std::fs::write("interpretation.svg", svg_interpretation)
+        .expect("Impossible d'ecrire le fichier SVG d'interpretation");
+    println!("SVG interprete ecrit dans interpretation.svg");
+
+    // ----- compilation vers SVG 
+    let mut compiler_logo = CompilerLogo::new();
+    compiler_logo.compiler(&ast);
+    let svg = compiler_logo.finish();
+    std::fs::write("carre.svg", svg).expect("Impossible d'ecrire le fichier SVG");
+    //println!("SVG compile genere dans carre.svg");
 }
