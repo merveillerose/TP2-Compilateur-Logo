@@ -1,6 +1,8 @@
 mod lexer;
+mod parser;
 
 use crate::lexer::lexer_rules;
+use crate::parser::grammar;
 
 
 fn main() {
@@ -19,6 +21,10 @@ fn main() {
     let input = "forward 100";
     let lexer_rules = lexer_rules();
     let lexemes = santiago::lexer::lex(&lexer_rules, &input).unwrap();
-    println!("{:#?}", lexemes);
+    //println!("{:#?}", lexemes);
+
+    let grammar = grammar();
+    let parse_trees = &santiago::parser::parse(&grammar, &lexemes).expect("syntax error")[0];
+    println!("{:#?}", parse_trees);
 
 }
