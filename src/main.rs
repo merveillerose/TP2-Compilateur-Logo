@@ -1,6 +1,11 @@
+mod lexer;
+
+use crate::lexer::lexer_rules;
+
+
 fn main() {
     // programme qui respecte la grammaire pour construire un carré
-    let logo_program = "
+    let _logo_program = "
         forward 100
         right 90
         forward 100
@@ -11,6 +16,9 @@ fn main() {
         right 90
     ";
 
-    println!("Programme Logo :\n{}", logo_program);
+    let input = "forward 100";
+    let lexer_rules = lexer_rules();
+    let lexemes = santiago::lexer::lex(&lexer_rules, &input).unwrap();
+    println!("{:#?}", lexemes);
 
 }
